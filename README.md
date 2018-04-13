@@ -1,1 +1,3 @@
-# text-me
+# TextMe
+
+A simple messaging application
