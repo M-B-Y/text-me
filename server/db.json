@@ -1,0 +1,22 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "joe",
+            "email": "joe@abc.com",
+            "password": "pwdjoe"
+        },
+        {
+            "id": 2,
+            "name": "jane",
+            "email": "jane@abc.com",
+            "password": "pwdjane"
+        },
+        {
+            "id": 3,
+            "name": "john",
+            "email": "john@abc.com",
+            "password": "pwdjohn"
+        }
+    ]
+}

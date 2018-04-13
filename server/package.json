@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "description": "Simple Fake API for TextMe application",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server --watch ./database.json"
+  },
+  "author": "Majdi Ben Yedder",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.12.1"
+  }
+}
