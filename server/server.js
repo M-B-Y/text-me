@@ -22,7 +22,14 @@ function createToken(payload) {
 
 // Verify the token 
 function verifyToken(token) {
-    return jwt.verify(token, SECRET_KEY, (err, decode) => decode !== undefined ? decode : err)
+    jwt.verify(token, SECRET_KEY, (err, decode) => {
+        if (decode === undefined) {
+            console.log(err)
+            return done (Error('invalid token'))
+        } else {
+            return decode
+        }
+    })   
 }
 
 // Check if the user exists in database
@@ -51,12 +58,19 @@ server.use(/^(?!\/auth).*$/, (req, res, next) => {
     }
     try {
         verifyToken(req.headers.authorization.split(' ')[1])
-        next()
     } catch (err) {
         const status = 401
         const message = 'Error: access_token is not valid'
         res.status(status).json({ status, message })
+        return
     }
+
+    //remove any id conflict error
+    if( req.method == 'POST' ) {
+        delete req.body.id
+    }
+
+    next()
 })
 
 server.use(router)
