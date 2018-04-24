@@ -24,8 +24,7 @@ function createToken(payload) {
 function verifyToken(token) {
     jwt.verify(token, SECRET_KEY, (err, decode) => {
         if (decode === undefined) {
-            console.log(err)
-            return done (Error('invalid token'))
+            return done (Error(err.name))
         } else {
             return decode
         }
@@ -60,7 +59,8 @@ server.use(/^(?!\/auth).*$/, (req, res, next) => {
         verifyToken(req.headers.authorization.split(' ')[1])
     } catch (err) {
         const status = 401
-        const message = 'Error: access_token is not valid'
+        const message = 'Error: invalid access_token'
+        if( err == 'TokenExpiredError' ) { message = 'Error: expired access_token' }
         res.status(status).json({ status, message })
         return
     }
@@ -78,3 +78,6 @@ server.use(router)
 server.listen(3000, () => {
   console.log('Run Auth API Server')
 })
+
+// for testing purpose
+module.exports = server
