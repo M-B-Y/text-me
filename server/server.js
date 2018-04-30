@@ -48,6 +48,33 @@ server.post('/auth/login', (req, res) => {
     res.status(200).json({ access_token })
 })
 
+// Check if the user email exists in database
+function isUserExisted(attr, value) {
+    return db.users.findIndex(user => user[attr] === value) !== -1
+}
+
+server.post('/register', (req, res) => {
+    if ( typeof req.body.name == 'undefined' || typeof req.body.email == 'undefined' || typeof req.body.password == 'undefined' ) {
+        const status = 401
+        const message = 'One or more attributes are missing'
+        res.status(status).json({ status, message })
+        return
+    }
+    const { name, email, password } = req.body
+    if ( isUserExisted('name', name) || isUserExisted('email', email) ) {
+        const status = 409
+        const message = (isUserExisted('name', name)) ? 'Name already exists' : 'Email already exists'
+        res.status(status).json({ status, message })
+        return
+    }
+    const users = router.db.get('users').value()
+    const id = users.reduce((max, u) => Math.max(max, u.id), users[0].id) + 1;
+    router.db.get('users').push({ id, name, email, password }).write()
+    const status = 200
+    const message = 'User successfully registered'
+    res.status(status).json({ status, message })
+})
+
 server.use(/^(?!\/auth).*$/, (req, res, next) => {
     if (req.headers.authorization === undefined || req.headers.authorization.split(' ')[0] !== 'Bearer') {
         const status = 401
